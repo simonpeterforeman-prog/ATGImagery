@@ -93,7 +93,7 @@
     letter-spacing: -1px; line-height: 1.1;
   }
   .category-meta {
-    font-size: 12px; color: #999; margin-bottom: 48px;
+    font-size: 12px; color: #999; margin-bottom: 8px;
     text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
   }
   .category-meta span { margin-right: 24px; }
@@ -521,13 +521,17 @@ function selectCategory(cat) {
   const spendLabel = d.meta.spend === 'essential' ? 'Essential' : d.meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary';
 
   let html = `
-    <div class="category-header">${cat}.</div>${d.meta.spend ? `
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:4px;">
+      <div class="category-header" style="margin-bottom:0;">${cat}.</div>
+      <span style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:1px; font-weight:600; white-space:nowrap;">${typeCount} Image Types</span>
+    </div>${d.meta.spend ? `
     <div style="margin-bottom:16px;"><span class="spend-tag ${spendCls}">${spendLabel}</span></div>` : ''}
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
-      <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
+    </div>
+    <div class="category-meta" style="margin-bottom:48px;">
+      <span>Previous Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
       <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
-      <span>${typeCount} Image Types</span>
     </div>
     <div class="types-grid">
   `;
