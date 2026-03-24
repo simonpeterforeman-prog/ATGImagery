@@ -236,9 +236,25 @@
     .category-meta { font-size: 11px; margin-bottom: 16px; word-wrap: break-word; }
     .category-meta span { display: block; margin-bottom: 4px; }
     .category-meta em { display: block; margin-top: 2px; }
-    .types-grid { gap: 16px; }
+    .types-grid {
+      gap: 16px; position: relative;
+      -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+      mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    }
+    .types-grid.scrolled-end {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
     .type-column { min-width: 100px; max-width: 120px; }
     .spend-tag { margin-bottom: 8px; }
+    .scroll-hint {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px; color: #bbb; text-transform: uppercase;
+      letter-spacing: 1px; font-weight: 500; margin-bottom: 12px;
+    }
+    .scroll-hint::after {
+      content: ''; flex: 1; height: 1px; background: linear-gradient(to right, #ddd, transparent);
+    }
   }
 </style>
 </head>
@@ -537,7 +553,8 @@ function selectCategory(cat) {
       <span>Previous Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
       <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
     </div>
-    <div class="types-grid">
+    <div class="scroll-hint" id="scroll-hint">Swipe to explore →</div>
+    <div class="types-grid" id="types-grid">
   `;
 
   // Sort types: winner first, then top choices, then rest
@@ -583,6 +600,18 @@ function selectCategory(cat) {
 
   html += `</div>`;
   content.innerHTML = html;
+
+  // Scroll hint: hide on desktop, handle fade on mobile
+  const hint = document.getElementById('scroll-hint');
+  const grid = document.getElementById('types-grid');
+  if (window.innerWidth > 768) {
+    hint.style.display = 'none';
+  }
+  grid.addEventListener('scroll', () => {
+    const atEnd = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 10;
+    grid.classList.toggle('scrolled-end', atEnd);
+    if (atEnd) hint.style.opacity = '0';
+  });
 }
 
 function openLightbox(src, cat, type, num, total) {
