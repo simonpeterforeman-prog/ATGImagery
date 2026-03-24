@@ -255,6 +255,19 @@
     .scroll-hint::after {
       content: ''; flex: 1; height: 1px; background: linear-gradient(to right, #ddd, transparent);
     }
+    .cat-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding: 12px 0; border-top: 1px solid #eee;
+    }
+    .cat-nav a {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase;
+      letter-spacing: 1px; cursor: pointer; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .cat-nav a:hover { color: #1a1a1a; }
+    .cat-nav a.hidden { visibility: hidden; }
+    .cat-nav .arrow { font-size: 16px; }
   }
 </style>
 </head>
@@ -549,10 +562,11 @@ function selectCategory(cat) {
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
     </div>
-    <div class="category-meta" style="margin-bottom:48px;">
+    <div class="category-meta" style="margin-bottom:24px;">
       <span>Previous Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
       <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
     </div>
+    <div class="cat-nav" id="cat-nav"></div>
     <div class="scroll-hint" id="scroll-hint">Swipe to explore →</div>
     <div class="types-grid" id="types-grid">
   `;
@@ -600,6 +614,20 @@ function selectCategory(cat) {
 
   html += `</div>`;
   content.innerHTML = html;
+
+  // Prev/Next category nav
+  const catNav = document.getElementById('cat-nav');
+  const catIdx = sortedCats.indexOf(cat);
+  const prevCat = catIdx > 0 ? sortedCats[catIdx - 1] : null;
+  const nextCat = catIdx < sortedCats.length - 1 ? sortedCats[catIdx + 1] : null;
+  if (window.innerWidth <= 768) {
+    catNav.innerHTML = `
+      <a ${prevCat ? `onclick="selectCategory('${prevCat.replace(/'/g, "\\'")}')"` : ''} class="${prevCat ? '' : 'hidden'}"><span class="arrow">←</span> ${prevCat || ''}</a>
+      <a ${nextCat ? `onclick="selectCategory('${nextCat.replace(/'/g, "\\'")}')"` : ''} class="${nextCat ? '' : 'hidden'}">${nextCat || ''} <span class="arrow">→</span></a>
+    `;
+  } else {
+    catNav.style.display = 'none';
+  }
 
   // Scroll hint: hide on desktop, handle fade on mobile
   const hint = document.getElementById('scroll-hint');
