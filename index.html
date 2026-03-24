@@ -43,6 +43,29 @@
     font-size: 10px; font-weight: 400; color: #aaa;
     margin-left: 6px;
   }
+  nav li .spend-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 8px;
+  }
+  .spend-essential { background: #4CAF50; }
+  .spend-semi { background: #FFB300; }
+  .spend-discretionary { background: #EF5350; }
+  nav .legend {
+    padding: 16px 24px 24px; font-size: 10px; color: #999;
+    letter-spacing: 0.5px; line-height: 1.8;
+  }
+  nav .legend-item {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 4px;
+  }
+  nav .legend-dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+  }
+  .spend-tag {
+    display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; padding: 3px 10px; border-radius: 2px; margin-left: 12px;
+  }
+  .spend-tag.essential { background: #E8F5E9; color: #2E7D32; }
+  .spend-tag.semi { background: #FFF8E1; color: #F57F17; }
+  .spend-tag.discretionary { background: #FFEBEE; color: #C62828; }
 
   /* Main Content */
   main {
@@ -169,6 +192,13 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
   <div class="logo-sub">ATG Object Imagery</div>
   <div class="divider"></div>
   <ul id="nav-list"></ul>
+  <div class="divider"></div>
+  <div class="legend">
+    <div style="font-weight:700; color:#666; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Spend Classification</div>
+    <div class="legend-item"><div class="legend-dot spend-essential"></div> Essential</div>
+    <div class="legend-item"><div class="legend-dot spend-semi"></div> Semi-discretionary</div>
+    <div class="legend-item"><div class="legend-dot spend-discretionary"></div> Discretionary</div>
+  </div>
 </nav>
 
 <main id="content">
@@ -184,7 +214,7 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes", spend: "semi" },
     types: {
       "toilet paper": ["image_01.png"],
       "tech": ["image_01.png","image_02.png"],
@@ -198,7 +228,7 @@ const DATA = {
     }
   },
   "Amazon": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes, Headphones" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes, Headphones", spend: "semi" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "box": ["image_01.png"],
@@ -210,7 +240,7 @@ const DATA = {
     }
   },
   "Gas & EV": {
-    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png", topChoices: ["signifiers"], topLabel: "Fuel gauge" },
+    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png", topChoices: ["signifiers"], topLabel: "Fuel gauge", spend: "essential" },
     types: {
       "nozzle charger": ["image_01.png","image_02.png"],
       "signifiers": ["image_01.png","image_02.png"],
@@ -219,7 +249,7 @@ const DATA = {
     }
   },
   "Target": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png", topChoices: ["clothing"], topLabel: "Clothes" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png", topChoices: ["clothing"], topLabel: "Clothes", spend: "semi" },
     types: {
       "clothing": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "home decor": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -230,7 +260,7 @@ const DATA = {
     }
   },
   "Grocery Stores": {
-    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png", topChoices: ["grocery bag", "produce"], topLabel: "Grocery bag, Produce" },
+    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png", topChoices: ["grocery bag", "produce"], topLabel: "Grocery bag, Produce", spend: "essential" },
     types: {
       "meat": ["image_01.png","image_02.png","image_03.png"],
       "dairy": ["image_01.png","image_02.png","image_03.png"],
@@ -242,7 +272,7 @@ const DATA = {
     }
   },
   "Home Improvement": {
-    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png", topChoices: ["tools"], topLabel: "Toolbox" },
+    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png", topChoices: ["tools"], topLabel: "Toolbox", spend: "discretionary" },
     types: {
       "paint": ["image_01.png","image_02.png","image_03.png"],
       "tools": ["image_01.png","image_02.png","image_03.png"],
@@ -251,7 +281,7 @@ const DATA = {
     }
   },
   "Restaurants": {
-    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png", topChoices: ["salad bowls", "drinks"], topLabel: "Salad, Sandwich, Soda" },
+    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png", topChoices: ["salad bowls", "drinks"], topLabel: "Salad, Sandwich, Soda", spend: "discretionary" },
     types: {
       "table setting": ["image_01.png","image_02.png"],
       "fast casual": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -265,7 +295,7 @@ const DATA = {
     }
   },
   "Travel": {
-    meta: { mix: "6.0%", winner: "Not tested" },
+    meta: { mix: "6.0%", winner: "Not tested", spend: "discretionary" },
     types: {
       "suitcase": ["image_01.png","image_02.png"],
       "passport": ["image_01.png"],
@@ -278,7 +308,7 @@ const DATA = {
     }
   },
   "Discount Stores": {
-    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png", topChoices: ["school"], topLabel: "Snacks, Pens" },
+    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png", topChoices: ["school"], topLabel: "Snacks, Pens", spend: "semi" },
     types: {
       "snacks": ["image_01.png","image_02.png"],
       "toys": ["image_01.png","image_02.png"],
@@ -288,7 +318,7 @@ const DATA = {
     }
   },
   "Drug Stores": {
-    meta: { mix: "2.1%", winner: "N/A" },
+    meta: { mix: "2.1%", winner: "N/A", spend: "semi" },
     types: {
       "pharmacy": ["image_01.png","image_02.png","image_03.png"],
       "groceries": ["image_01.png","image_02.png","image_03.png"],
@@ -297,7 +327,7 @@ const DATA = {
     }
   },
   "Department Stores": {
-    meta: { mix: "4.5%", winner: "Clothes (89%)", winnerType: "clothes", winnerImage: "image_01.png" },
+    meta: { mix: "4.5%", winner: "Clothes (89%)", winnerType: "clothes", winnerImage: "image_01.png", spend: "discretionary" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "candles": ["image_01.png","image_02.png"],
@@ -306,7 +336,7 @@ const DATA = {
     }
   },
   "Telecom Utilities": {
-    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png", topChoices: ["tv"], topLabel: "TV" },
+    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png", topChoices: ["tv"], topLabel: "TV", spend: "essential" },
     types: {
       "wifi": ["image_01.png","image_02.png"],
       "electric": ["image_01.png"],
@@ -326,7 +356,8 @@ const sortedCats = Object.keys(DATA).sort((a, b) => parseFloat(b && DATA[b].meta
 sortedCats.forEach(cat => {
   const totalImages = Object.values(DATA[cat].types).reduce((sum, arr) => sum + arr.length, 0);
   const li = document.createElement('li');
-  li.innerHTML = `${cat}<span class="mix">${DATA[cat].meta.mix}</span> <span class="count">${totalImages}</span>`;
+  const spendClass = DATA[cat].meta.spend === 'essential' ? 'spend-essential' : DATA[cat].meta.spend === 'semi' ? 'spend-semi' : 'spend-discretionary';
+  li.innerHTML = `<span class="spend-dot ${spendClass}"></span>${cat}<span class="mix">${DATA[cat].meta.mix}</span> <span class="count">${totalImages}</span>`;
   li.dataset.cat = cat;
   li.onclick = () => selectCategory(cat);
   navList.appendChild(li);
@@ -345,7 +376,7 @@ function selectCategory(cat) {
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
       <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
       <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
-      <span>${typeCount} Image Types</span>
+      <span>${typeCount} Image Types</span>${d.meta.spend ? `<span class="spend-tag ${d.meta.spend === 'essential' ? 'essential' : d.meta.spend === 'semi' ? 'semi' : 'discretionary'}">${d.meta.spend === 'essential' ? 'Essential' : d.meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary'}</span>` : ''}
     </div>
     <div class="types-grid">
   `;
