@@ -5,119 +5,146 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ATG Object Imagery Library</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #f5f5f7; color: #1d1d1f; display: flex; height: 100vh; overflow: hidden; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background: #fff; color: #1a1a1a; display: flex; height: 100vh; overflow: hidden; }
 
   /* Left Nav */
   nav {
-    width: 240px; min-width: 240px; background: #fff; border-right: 1px solid #d2d2d7;
+    width: 260px; min-width: 260px; background: #1a1a1a;
     display: flex; flex-direction: column; overflow-y: auto;
   }
-  nav h1 {
-    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-    color: #86868b; padding: 24px 20px 12px; border-bottom: 1px solid #e8e8ed;
+  nav .logo {
+    font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+    color: #fff; padding: 32px 24px 8px;
   }
-  nav ul { list-style: none; padding: 8px 0; }
+  nav .logo-sub {
+    font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4); padding: 0 24px 24px;
+  }
+  nav .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 0 24px; }
+  nav ul { list-style: none; padding: 16px 0; }
   nav li {
-    padding: 10px 20px; font-size: 14px; font-weight: 500; cursor: pointer;
-    color: #1d1d1f; transition: background 0.15s, color 0.15s;
+    padding: 12px 24px; font-size: 13px; font-weight: 500; cursor: pointer;
+    color: rgba(255,255,255,0.6); transition: all 0.2s;
     display: flex; justify-content: space-between; align-items: center;
+    letter-spacing: 0.3px;
   }
-  nav li:hover { background: #f0f0f5; }
-  nav li.active { background: #0071e3; color: #fff; border-radius: 0; }
+  nav li:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  nav li.active { color: #fff; background: rgba(255,255,255,0.1); border-left: 3px solid #fff; padding-left: 21px; }
   nav li .count {
-    font-size: 11px; font-weight: 400; color: #86868b;
-    background: #f0f0f5; border-radius: 10px; padding: 2px 8px;
+    font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 2px 8px;
+    letter-spacing: 0.5px;
   }
-  nav li.active .count { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.2); }
+  nav li.active .count { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.3); }
+  nav li .mix {
+    font-size: 10px; font-weight: 400; color: rgba(255,255,255,0.3);
+    margin-left: 6px;
+  }
 
   /* Main Content */
   main {
-    flex: 1; overflow-y: auto; padding: 32px 40px;
+    flex: 1; overflow-y: auto; padding: 48px 56px; background: #fff;
+  }
+  .section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+    color: #1a1a1a; margin-bottom: 12px;
+  }
+  .section-divider {
+    height: 1px; background: #1a1a1a; margin-bottom: 40px;
   }
   .category-header {
-    font-size: 28px; font-weight: 700; margin-bottom: 8px; color: #1d1d1f;
+    font-size: 42px; font-weight: 900; margin-bottom: 12px; color: #1a1a1a;
+    letter-spacing: -1px; line-height: 1.1;
   }
   .category-meta {
-    font-size: 13px; color: #86868b; margin-bottom: 32px;
+    font-size: 12px; color: #999; margin-bottom: 48px;
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 500;
   }
-  .category-meta span { margin-right: 16px; }
+  .category-meta span { margin-right: 24px; }
+  .category-meta strong { color: #1a1a1a; font-weight: 700; }
 
   /* Item Type Columns */
   .types-grid {
-    display: flex; gap: 16px; overflow-x: auto; padding-bottom: 24px;
+    display: flex; gap: 20px; overflow-x: auto; padding-bottom: 24px;
   }
   .type-column {
-    min-width: 130px; max-width: 160px; flex-shrink: 0;
+    min-width: 110px; max-width: 135px; flex-shrink: 0;
   }
   .type-title {
-    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;
-    color: #1d1d1f; padding-bottom: 8px; margin-bottom: 12px;
-    border-bottom: 2px solid #0071e3;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    color: #1a1a1a; padding-bottom: 10px; margin-bottom: 14px;
+    border-bottom: 1px solid #1a1a1a;
   }
   .image-stack {
-    display: flex; flex-direction: column; gap: 8px;
+    display: flex; flex-direction: column; gap: 10px;
   }
   .image-card {
-    background: #fff; border-radius: 10px; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
+    background: #f7f7f7; border-radius: 4px; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer; border: 1px solid #eee;
   }
   .image-card:hover {
-    transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   }
   .image-card img {
-    width: 100%; height: auto; display: block; background: #fafafa;
+    width: 100%; height: auto; display: block; background: #f7f7f7;
   }
   .image-card .label {
-    font-size: 11px; color: #86868b; padding: 6px 10px; text-align: center;
+    font-size: 10px; color: #999; padding: 6px 8px; text-align: center;
+    font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
   }
 
   /* Lightbox */
   .lightbox {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
     z-index: 100; align-items: center; justify-content: center; cursor: zoom-out;
   }
   .lightbox.open { display: flex; }
   .lightbox img {
-    max-width: 90vw; max-height: 90vh; border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    max-width: 90vw; max-height: 90vh; border-radius: 2px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
   }
   .lightbox-close {
-    position: absolute; top: 20px; right: 24px; font-size: 32px; color: #fff;
+    position: absolute; top: 24px; right: 28px; font-size: 28px; color: #fff;
     cursor: pointer; line-height: 1; font-weight: 300;
   }
   .lightbox-meta {
-    position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-    color: rgba(255,255,255,0.7); font-size: 13px;
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.5); font-size: 11px; text-transform: uppercase;
+    letter-spacing: 1.5px; font-weight: 500;
   }
 
   /* Empty state */
   .empty {
-    color: #86868b; font-size: 14px; text-align: center; padding: 60px 20px;
+    color: #ccc; font-size: 13px; text-align: center; padding: 80px 20px;
+    text-transform: uppercase; letter-spacing: 2px; font-weight: 600;
   }
 
   /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
+  nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
 </style>
 </head>
 <body>
 
 <!-- Password Gate -->
-<div id="pw-gate" style="display:flex; position:fixed; inset:0; z-index:999; background:#f5f5f7; align-items:center; justify-content:center; flex-direction:column;">
-  <div style="text-align:center; max-width:320px;">
-    <h2 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#1d1d1f;">ATG Object Imagery</h2>
-    <p style="font-size:13px; color:#86868b; margin-bottom:24px;">Enter password to continue</p>
+<div id="pw-gate" style="display:flex; position:fixed; inset:0; z-index:999; background:#1a1a1a; align-items:center; justify-content:center; flex-direction:column;">
+  <div style="text-align:center; max-width:340px;">
+    <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:#fff; margin-bottom:4px;">MCD Partners</div>
+    <div style="font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); margin-bottom:48px;">ATG Object Imagery</div>
     <input id="pw-input" type="password" placeholder="Password" autofocus
-      style="width:100%; padding:12px 16px; font-size:15px; border:1px solid #d2d2d7; border-radius:10px; outline:none; text-align:center; margin-bottom:12px;"
-      onkeydown="if(event.key==='Enter')checkPw()">
+      style="width:100%; padding:14px 16px; font-size:14px; font-family:'Inter',sans-serif; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:0; color:#fff; text-align:center; margin-bottom:16px; outline:none; letter-spacing:1px;"
+      onkeydown="if(event.key==='Enter')checkPw()" onfocus="this.style.borderColor='rgba(255,255,255,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
     <button onclick="checkPw()"
-      style="width:100%; padding:12px; font-size:15px; font-weight:600; background:#0071e3; color:#fff; border:none; border-radius:10px; cursor:pointer;">
+      style="width:100%; padding:14px; font-size:11px; font-weight:700; font-family:'Inter',sans-serif; background:#fff; color:#1a1a1a; border:none; border-radius:0; cursor:pointer; text-transform:uppercase; letter-spacing:2px;">
       Continue
     </button>
-    <p id="pw-error" style="color:#ff3b30; font-size:13px; margin-top:12px; display:none;">Incorrect password</p>
+    <p id="pw-error" style="color:#ff4444; font-size:11px; margin-top:16px; display:none; text-transform:uppercase; letter-spacing:1px;">Incorrect password</p>
   </div>
 </div>
 
@@ -133,19 +160,20 @@ function checkPw() {
     document.getElementById('pw-input').focus();
   }
 }
-// Auto-bypass if already authenticated this session
 if (sessionStorage.getItem('atg-auth') === 'true') {
   document.getElementById('pw-gate').style.display = 'none';
 }
 </script>
 
 <nav>
-  <h1>ATG Imagery</h1>
+  <div class="logo">MCD Partners</div>
+  <div class="logo-sub">ATG Object Imagery</div>
+  <div class="divider"></div>
   <ul id="nav-list"></ul>
 </nav>
 
 <main id="content">
-  <div class="empty">Select a category from the left</div>
+  <div class="empty">Select a category</div>
 </main>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
@@ -298,7 +326,7 @@ const sortedCats = Object.keys(DATA).sort((a, b) => parseFloat(b && DATA[b].meta
 sortedCats.forEach(cat => {
   const totalImages = Object.values(DATA[cat].types).reduce((sum, arr) => sum + arr.length, 0);
   const li = document.createElement('li');
-  li.innerHTML = `${cat} <span class="count">${totalImages}</span>`;
+  li.innerHTML = `${cat}<span class="mix">${DATA[cat].meta.mix}</span> <span class="count">${totalImages}</span>`;
   li.dataset.cat = cat;
   li.onclick = () => selectCategory(cat);
   navList.appendChild(li);
@@ -312,11 +340,13 @@ function selectCategory(cat) {
   const typeCount = Object.keys(d.types).length;
 
   let html = `
-    <div class="category-header">${cat}</div>
+    <div class="section-label">${cat}</div>
+    <div class="section-divider"></div>
+    <div class="category-header">${d.meta.winner !== "Not tested" && d.meta.winner !== "N/A" ? d.meta.winner.split('(')[0].trim() + '.' : cat + '.'}</div>
     <div class="category-meta">
-      <span>MCC Sales Mix: ${d.meta.mix}</span>
-      <span>Force Choice Winner: ${d.meta.winner}</span>
-      <span>${typeCount} image types</span>
+      <span>MCC Sales Mix: <strong>${d.meta.mix}</strong></span>
+      <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>
+      <span>${typeCount} Image Types</span>
     </div>
     <div class="types-grid">
   `;
@@ -330,7 +360,7 @@ function selectCategory(cat) {
       html += `
         <div class="image-card" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${images.length})">
           <img src="${src}" alt="${typeName} ${i + 1}" loading="lazy">
-          <div class="label">${i + 1} of ${images.length}</div>
+          <div class="label">${i + 1} / ${images.length}</div>
         </div>
       `;
     });
@@ -345,7 +375,7 @@ function openLightbox(src, cat, type, num, total) {
   event.stopPropagation();
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-meta').textContent = `${cat} / ${type} — ${num} of ${total}`;
+  document.getElementById('lightbox-meta').textContent = `${cat}  ·  ${type}  ·  ${num} of ${total}`;
   lb.classList.add('open');
 }
 
