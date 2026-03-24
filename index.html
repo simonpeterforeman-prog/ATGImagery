@@ -82,6 +82,12 @@
   .image-card:hover {
     transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   }
+  .image-card.winner {
+    border: 2px solid #1a1a1a;
+  }
+  .image-card.winner .label {
+    color: #1a1a1a; font-weight: 700;
+  }
   .image-card img {
     width: 100%; height: auto; display: block; background: #f7f7f7;
   }
@@ -178,7 +184,7 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png" },
     types: {
       "toilet paper": ["image_01.png"],
       "tech": ["image_01.png","image_02.png"],
@@ -192,7 +198,7 @@ const DATA = {
     }
   },
   "Amazon": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "box": ["image_01.png"],
@@ -204,7 +210,7 @@ const DATA = {
     }
   },
   "Gas & EV": {
-    meta: { mix: "4.5%", winner: "Gas pump (95%)" },
+    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png" },
     types: {
       "nozzle charger": ["image_01.png","image_02.png"],
       "signifiers": ["image_01.png","image_02.png"],
@@ -213,7 +219,7 @@ const DATA = {
     }
   },
   "Target": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png" },
     types: {
       "clothing": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "home decor": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -224,7 +230,7 @@ const DATA = {
     }
   },
   "Grocery Stores": {
-    meta: { mix: "9.0%", winner: "Milk (54%)" },
+    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png" },
     types: {
       "meat": ["image_01.png","image_02.png","image_03.png"],
       "dairy": ["image_01.png","image_02.png","image_03.png"],
@@ -236,7 +242,7 @@ const DATA = {
     }
   },
   "Home Improvement": {
-    meta: { mix: "2.9%", winner: "Paint (41%)" },
+    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png" },
     types: {
       "paint": ["image_01.png","image_02.png","image_03.png"],
       "tools": ["image_01.png","image_02.png","image_03.png"],
@@ -245,7 +251,7 @@ const DATA = {
     }
   },
   "Restaurants": {
-    meta: { mix: "9.2%", winner: "Burger (51%)" },
+    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png" },
     types: {
       "table setting": ["image_01.png","image_02.png"],
       "fast casual": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -272,7 +278,7 @@ const DATA = {
     }
   },
   "Discount Stores": {
-    meta: { mix: "2.1%", winner: "Candy (74%)" },
+    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png" },
     types: {
       "snacks": ["image_01.png","image_02.png"],
       "toys": ["image_01.png","image_02.png"],
@@ -291,7 +297,7 @@ const DATA = {
     }
   },
   "Department Stores": {
-    meta: { mix: "4.5%", winner: "Clothes (89%)" },
+    meta: { mix: "4.5%", winner: "Clothes (89%)", winnerType: "clothes", winnerImage: "image_01.png" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "candles": ["image_01.png","image_02.png"],
@@ -300,7 +306,7 @@ const DATA = {
     }
   },
   "Telecom Utilities": {
-    meta: { mix: "4.4%", winner: "Wifi (76%)" },
+    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png" },
     types: {
       "wifi": ["image_01.png","image_02.png"],
       "electric": ["image_01.png"],
@@ -343,16 +349,32 @@ function selectCategory(cat) {
     <div class="types-grid">
   `;
 
-  Object.entries(d.types).forEach(([typeName, images]) => {
+  // Sort types so winner column is first
+  const entries = Object.entries(d.types);
+  const winnerType = d.meta.winnerType;
+  const winnerImage = d.meta.winnerImage;
+  entries.sort((a, b) => {
+    if (a[0] === winnerType) return -1;
+    if (b[0] === winnerType) return 1;
+    return 0;
+  });
+
+  entries.forEach(([typeName, images]) => {
+    // Reorder images so winner image is first in the winner column
+    let sortedImages = [...images];
+    if (typeName === winnerType && winnerImage && sortedImages.includes(winnerImage)) {
+      sortedImages = [winnerImage, ...sortedImages.filter(img => img !== winnerImage)];
+    }
+
     html += `<div class="type-column">`;
-    html += `<div class="type-title">${typeName}</div>`;
+    html += `<div class="type-title">${typeName}${typeName === winnerType ? ' ★' : ''}</div>`;
     html += `<div class="image-stack">`;
-    images.forEach((img, i) => {
+    sortedImages.forEach((img, i) => {
       const src = encodeURI(`${cat}/${typeName}/${img}`);
       html += `
-        <div class="image-card" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${images.length})">
+        <div class="image-card${typeName === winnerType && i === 0 ? ' winner' : ''}" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${sortedImages.length})">
           <img src="${src}" alt="${typeName} ${i + 1}" loading="lazy">
-          <div class="label">${i + 1} / ${images.length}</div>
+          <div class="label">${i + 1} / ${sortedImages.length}</div>
         </div>
       `;
     });
