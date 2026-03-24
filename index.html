@@ -105,6 +105,40 @@
 </head>
 <body>
 
+<!-- Password Gate -->
+<div id="pw-gate" style="display:flex; position:fixed; inset:0; z-index:999; background:#f5f5f7; align-items:center; justify-content:center; flex-direction:column;">
+  <div style="text-align:center; max-width:320px;">
+    <h2 style="font-size:22px; font-weight:700; margin-bottom:8px; color:#1d1d1f;">ATG Object Imagery</h2>
+    <p style="font-size:13px; color:#86868b; margin-bottom:24px;">Enter password to continue</p>
+    <input id="pw-input" type="password" placeholder="Password" autofocus
+      style="width:100%; padding:12px 16px; font-size:15px; border:1px solid #d2d2d7; border-radius:10px; outline:none; text-align:center; margin-bottom:12px;"
+      onkeydown="if(event.key==='Enter')checkPw()">
+    <button onclick="checkPw()"
+      style="width:100%; padding:12px; font-size:15px; font-weight:600; background:#0071e3; color:#fff; border:none; border-radius:10px; cursor:pointer;">
+      Continue
+    </button>
+    <p id="pw-error" style="color:#ff3b30; font-size:13px; margin-top:12px; display:none;">Incorrect password</p>
+  </div>
+</div>
+
+<script>
+function checkPw() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === 'atg2025') {
+    document.getElementById('pw-gate').style.display = 'none';
+    sessionStorage.setItem('atg-auth', 'true');
+  } else {
+    document.getElementById('pw-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+// Auto-bypass if already authenticated this session
+if (sessionStorage.getItem('atg-auth') === 'true') {
+  document.getElementById('pw-gate').style.display = 'none';
+}
+</script>
+
 <nav>
   <h1>ATG Imagery</h1>
   <ul id="nav-list"></ul>
