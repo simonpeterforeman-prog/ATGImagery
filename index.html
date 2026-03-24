@@ -61,11 +61,28 @@
   }
   .spend-tag {
     display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1px; padding: 3px 10px; border-radius: 2px; margin-left: 12px;
+    letter-spacing: 1px; padding: 3px 10px; border-radius: 2px;
   }
   .spend-tag.essential { background: #E8F5E9; color: #2E7D32; }
   .spend-tag.semi { background: #FFF8E1; color: #F57F17; }
   .spend-tag.discretionary { background: #FFEBEE; color: #C62828; }
+
+  /* Hamburger */
+  .hamburger {
+    display: none; position: fixed; top: 16px; left: 16px; z-index: 60;
+    width: 36px; height: 36px; background: #1a1a1a; border: none; border-radius: 4px;
+    cursor: pointer; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  }
+  .hamburger span {
+    display: block; width: 18px; height: 2px; background: #fff; transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(2.5px, 2.5px); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(2.5px, -2.5px); }
+  .nav-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 49;
+  }
+  .nav-overlay.open { display: block; }
 
   /* Main Content */
   main {
@@ -150,6 +167,25 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #ddd; border-radius: 3px; }
   nav::-webkit-scrollbar-thumb { background: #ccc; }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    nav {
+      position: fixed; left: -280px; top: 0; bottom: 0; z-index: 50;
+      width: 280px; min-width: 280px;
+      transition: left 0.3s ease; box-shadow: none;
+    }
+    nav.open { left: 0; box-shadow: 4px 0 20px rgba(0,0,0,0.15); }
+    main {
+      padding: 72px 20px 32px; width: 100%;
+    }
+    .category-header { font-size: 28px; margin-bottom: 8px; }
+    .category-meta { font-size: 11px; margin-bottom: 24px; }
+    .category-meta span { display: block; margin-bottom: 4px; }
+    .types-grid { gap: 16px; }
+    .type-column { min-width: 100px; max-width: 120px; }
+  }
 </style>
 </head>
 <body>
@@ -187,7 +223,12 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 }
 </script>
 
-<nav>
+<button class="hamburger" id="hamburger" onclick="toggleNav()">
+  <span></span><span></span><span></span>
+</button>
+<div class="nav-overlay" id="nav-overlay" onclick="toggleNav()"></div>
+
+<nav id="nav">
   <div class="logo">MCD Partners</div>
   <div class="logo-sub">ATG Object Imagery</div>
   <div class="divider"></div>
@@ -366,17 +407,27 @@ sortedCats.forEach(cat => {
 function selectCategory(cat) {
   activeCategory = cat;
   document.querySelectorAll('nav li').forEach(el => el.classList.toggle('active', el.dataset.cat === cat));
+  // Close nav on mobile
+  if (window.innerWidth <= 768) {
+    document.getElementById('nav').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+    document.getElementById('nav-overlay').classList.remove('open');
+  }
 
   const d = DATA[cat];
   const typeCount = Object.keys(d.types).length;
 
+  const spendCls = d.meta.spend === 'essential' ? 'essential' : d.meta.spend === 'semi' ? 'semi' : 'discretionary';
+  const spendLabel = d.meta.spend === 'essential' ? 'Essential' : d.meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary';
+
   let html = `
-    <div class="category-header">${cat}.</div>
+    <div class="category-header">${cat}.</div>${d.meta.spend ? `
+    <div style="margin-bottom:16px;"><span class="spend-tag ${spendCls}">${spendLabel}</span></div>` : ''}
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
       <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
       <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
-      <span>${typeCount} Image Types</span>${d.meta.spend ? `<span class="spend-tag ${d.meta.spend === 'essential' ? 'essential' : d.meta.spend === 'semi' ? 'semi' : 'discretionary'}">${d.meta.spend === 'essential' ? 'Essential' : d.meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary'}</span>` : ''}
+      <span>${typeCount} Image Types</span>
     </div>
     <div class="types-grid">
   `;
@@ -436,6 +487,12 @@ function openLightbox(src, cat, type, num, total) {
 
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
+}
+
+function toggleNav() {
+  document.getElementById('nav').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('nav-overlay').classList.toggle('open');
 }
 
 document.addEventListener('keydown', e => {
