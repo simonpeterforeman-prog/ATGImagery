@@ -184,7 +184,7 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes" },
     types: {
       "toilet paper": ["image_01.png"],
       "tech": ["image_01.png","image_02.png"],
@@ -198,7 +198,7 @@ const DATA = {
     }
   },
   "Amazon": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes, Headphones" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "box": ["image_01.png"],
@@ -210,7 +210,7 @@ const DATA = {
     }
   },
   "Gas & EV": {
-    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png" },
+    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png", topChoices: ["signifiers"], topLabel: "Fuel gauge" },
     types: {
       "nozzle charger": ["image_01.png","image_02.png"],
       "signifiers": ["image_01.png","image_02.png"],
@@ -219,7 +219,7 @@ const DATA = {
     }
   },
   "Target": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png", topChoices: ["clothing"], topLabel: "Clothes" },
     types: {
       "clothing": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "home decor": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -230,7 +230,7 @@ const DATA = {
     }
   },
   "Grocery Stores": {
-    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png" },
+    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png", topChoices: ["grocery bag", "produce"], topLabel: "Grocery bag, Produce" },
     types: {
       "meat": ["image_01.png","image_02.png","image_03.png"],
       "dairy": ["image_01.png","image_02.png","image_03.png"],
@@ -242,7 +242,7 @@ const DATA = {
     }
   },
   "Home Improvement": {
-    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png" },
+    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png", topChoices: ["tools"], topLabel: "Toolbox" },
     types: {
       "paint": ["image_01.png","image_02.png","image_03.png"],
       "tools": ["image_01.png","image_02.png","image_03.png"],
@@ -251,7 +251,7 @@ const DATA = {
     }
   },
   "Restaurants": {
-    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png" },
+    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png", topChoices: ["salad bowls", "drinks"], topLabel: "Salad, Sandwich, Soda" },
     types: {
       "table setting": ["image_01.png","image_02.png"],
       "fast casual": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -278,7 +278,7 @@ const DATA = {
     }
   },
   "Discount Stores": {
-    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png" },
+    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png", topChoices: ["school"], topLabel: "Snacks, Pens" },
     types: {
       "snacks": ["image_01.png","image_02.png"],
       "toys": ["image_01.png","image_02.png"],
@@ -306,7 +306,7 @@ const DATA = {
     }
   },
   "Telecom Utilities": {
-    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png" },
+    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png", topChoices: ["tv"], topLabel: "TV" },
     types: {
       "wifi": ["image_01.png","image_02.png"],
       "electric": ["image_01.png"],
@@ -343,19 +343,28 @@ function selectCategory(cat) {
     <div class="category-header">${cat}.</div>
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
-      <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>
+      <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
+      <span>Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
       <span>${typeCount} Image Types</span>
     </div>
     <div class="types-grid">
   `;
 
-  // Sort types so winner column is first
+  // Sort types: winner first, then top choices, then rest
   const entries = Object.entries(d.types);
   const winnerType = d.meta.winnerType;
   const winnerImage = d.meta.winnerImage;
+  const topChoices = d.meta.topChoices || [];
   entries.sort((a, b) => {
-    if (a[0] === winnerType) return -1;
-    if (b[0] === winnerType) return 1;
+    const aIsWinner = a[0] === winnerType;
+    const bIsWinner = b[0] === winnerType;
+    const aIsTop = topChoices.includes(a[0]);
+    const bIsTop = topChoices.includes(b[0]);
+    if (aIsWinner) return -1;
+    if (bIsWinner) return 1;
+    if (aIsTop && !bIsTop) return -1;
+    if (!aIsTop && bIsTop) return 1;
+    if (aIsTop && bIsTop) return topChoices.indexOf(a[0]) - topChoices.indexOf(b[0]);
     return 0;
   });
 
@@ -367,7 +376,8 @@ function selectCategory(cat) {
     }
 
     html += `<div class="type-column">`;
-    html += `<div class="type-title">${typeName}${typeName === winnerType ? ' ★' : ''}</div>`;
+    const isTop = topChoices.includes(typeName);
+    html += `<div class="type-title">${typeName}${typeName === winnerType ? ' ★' : (isTop ? ' ◆' : '')}</div>`;
     html += `<div class="image-stack">`;
     sortedImages.forEach((img, i) => {
       const src = encodeURI(`${cat}/${typeName}/${img}`);
