@@ -342,7 +342,7 @@ function selectCategory(cat) {
   let html = `
     <div class="section-label">${cat}</div>
     <div class="section-divider"></div>
-    <div class="category-header">${d.meta.winner !== "Not tested" && d.meta.winner !== "N/A" ? d.meta.winner.split('(')[0].trim() + '.' : cat + '.'}</div>
+    <div class="category-header">${cat}.</div>
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong></span>
       <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>
