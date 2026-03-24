@@ -48,13 +48,6 @@
   main {
     flex: 1; overflow-y: auto; padding: 48px 56px; background: #fff;
   }
-  .section-label {
-    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
-    color: #1a1a1a; margin-bottom: 12px;
-  }
-  .section-divider {
-    height: 1px; background: #1a1a1a; margin-bottom: 40px;
-  }
   .category-header {
     font-size: 42px; font-weight: 900; margin-bottom: 12px; color: #1a1a1a;
     letter-spacing: -1px; line-height: 1.1;
@@ -151,7 +144,7 @@
 <script>
 function checkPw() {
   const pw = document.getElementById('pw-input').value;
-  if (pw === 'atg2025') {
+  if (pw === 'atg2026') {
     document.getElementById('pw-gate').style.display = 'none';
     sessionStorage.setItem('atg-auth', 'true');
   } else {
@@ -195,13 +188,13 @@ const DATA = {
       "walmart box": ["image_01.png"],
       "school": ["image_01.png","image_02.png"],
       "pet": ["image_01.png","image_02.png"],
-      "baby stuff": ["image_01.png","image_02.png"]
+      "baby": ["image_01.png","image_02.png"]
     }
   },
   "Amazon": {
     meta: { mix: "14.1%", winner: "Cell phone charger (32%)" },
     types: {
-      "clothes shoes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
+      "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "box": ["image_01.png"],
       "groceries": ["image_01.png","image_02.png","image_03.png"],
       "electronics": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -210,10 +203,11 @@ const DATA = {
       "amazon products": ["image_01.png","image_02.png"]
     }
   },
-  "Gas Stations": {
+  "Gas & EV": {
     meta: { mix: "4.5%", winner: "Gas pump (95%)" },
     types: {
-      "gas ev fuel pump": ["image_01.png","image_02.png","image_03.png","image_04.png"],
+      "nozzle charger": ["image_01.png","image_02.png"],
+      "signifiers": ["image_01.png","image_02.png"],
       "snacks": ["image_01.png","image_02.png","image_03.png"],
       "drinks": ["image_01.png","image_02.png","image_03.png"]
     }
@@ -290,13 +284,13 @@ const DATA = {
   "Drug Stores": {
     meta: { mix: "2.1%", winner: "N/A" },
     types: {
-      "pharmacy vitamins": ["image_01.png","image_02.png","image_03.png"],
+      "pharmacy": ["image_01.png","image_02.png","image_03.png"],
       "groceries": ["image_01.png","image_02.png","image_03.png"],
-      "snacks candy": ["image_01.png","image_02.png"],
+      "snacks": ["image_01.png","image_02.png"],
       "skin care": ["image_01.png","image_02.png","image_03.png"]
     }
   },
-  "Clothing Department Stores": {
+  "Department Stores": {
     meta: { mix: "4.5%", winner: "Clothes (89%)" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -340,8 +334,6 @@ function selectCategory(cat) {
   const typeCount = Object.keys(d.types).length;
 
   let html = `
-    <div class="section-label">${cat}</div>
-    <div class="section-divider"></div>
     <div class="category-header">${cat}.</div>
     <div class="category-meta">
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong></span>
