@@ -178,7 +178,7 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", winner: "Toilet paper (76%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)" },
     types: {
       "toilet paper": ["image_01.png"],
       "tech": ["image_01.png","image_02.png"],
@@ -192,7 +192,7 @@ const DATA = {
     }
   },
   "Amazon": {
-    meta: { mix: "14.1%", winner: "Cell phone charger (32%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)" },
     types: {
       "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "box": ["image_01.png"],
@@ -213,7 +213,7 @@ const DATA = {
     }
   },
   "Target": {
-    meta: { mix: "14.1%", winner: "Dish soap (35%)" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)" },
     types: {
       "clothing": ["image_01.png","image_02.png","image_03.png","image_04.png"],
       "home decor": ["image_01.png","image_02.png","image_03.png","image_04.png"],
@@ -336,7 +336,7 @@ function selectCategory(cat) {
   let html = `
     <div class="category-header">${cat}.</div>
     <div class="category-meta">
-      <span>MCC Sales Mix: <strong>${d.meta.mix}</strong></span>
+      <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
       <span>Force Choice Winner: <strong>${d.meta.winner}</strong></span>
       <span>${typeCount} Image Types</span>
     </div>
