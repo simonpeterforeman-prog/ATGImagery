@@ -22,7 +22,7 @@
   }
   nav .logo-sub {
     font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 1.5px;
-    color: #999; padding: 0 24px 16px;
+    color: #999; padding: 0 24px 2px; line-height: 1.2;
   }
   nav .divider { height: 1px; background: #ddd; margin: 0 24px; }
   nav ul { list-style: none; padding: 16px 0; }
@@ -50,9 +50,12 @@
   }
   nav li .spend-dot {
     width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 8px;
-    cursor: default;
+    cursor: default; position: relative; z-index: 2;
   }
-  nav li:hover .spend-tip {
+  nav li .spend-dot::after {
+    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  }
+  nav li .spend-dot:hover + .spend-tip {
     display: block;
   }
   .spend-tip {
@@ -145,7 +148,7 @@
     color: #1a1a1a; font-weight: 700;
   }
   .image-card img {
-    width: 100%; height: auto; display: block; background: #f7f7f7;
+    width: calc(100% - 16px); height: auto; max-height: 160px; object-fit: contain; display: block; background: #f7f7f7; margin: 8px auto 0;
   }
   .image-card .label {
     font-size: 10px; color: #999; padding: 6px 8px; text-align: center;
@@ -286,13 +289,14 @@
 <body>
 
 <!-- Method Tooltip -->
-<div id="method-tip" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:#1a1a1a;color:#fff;padding:20px 24px;font-size:10px;line-height:1.6;letter-spacing:0;font-weight:400;border-radius:4px;z-index:200;box-shadow:0 8px 30px rgba(0,0,0,0.3);font-family:'Inter',sans-serif;" onmouseleave="this.style.display='none'"><strong style="font-weight:700;display:block;margin-bottom:6px;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Methodology</strong>500+ consumers surveyed across 11 reward categories. Tested unaided word association, image association ratings, and force choice for best-fit imagery. Everyday purchase items consistently outperformed big-ticket or niche products.<br><br><em style="color:#999;font-style:italic;">Source: Client Confidential Consumer Insights, 2023</em></div>
+<div id="method-tip" style="display:none;position:absolute;width:280px;background:#fff;color:#555;padding:16px 18px;font-size:10px;line-height:1.6;letter-spacing:0;font-weight:400;border-radius:4px;z-index:200;box-shadow:0 4px 20px rgba(0,0,0,0.15);font-family:'Inter',sans-serif;" onmouseleave="this.style.display='none'"><strong style="font-weight:700;display:block;margin-bottom:6px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#1a1a1a;">Methodology</strong>500+ consumers surveyed across 11 reward categories. Tested unaided word association, image association ratings, and force choice for best-fit imagery. Everyday purchase items consistently outperformed big-ticket or niche products.<br><br><em style="color:#bbb;font-style:italic;">Source: Client Consumer Insights, 2023</em></div>
 
 <!-- Password Gate -->
 <div id="pw-gate" style="display:flex; position:fixed; inset:0; z-index:999; background:#1a1a1a; align-items:center; justify-content:center; flex-direction:column;">
   <div style="text-align:center; max-width:340px;">
     <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:2px; color:#fff; margin-bottom:4px;">MCD Partners</div>
-    <div style="font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); margin-bottom:48px;">Purchase Motivators</div>
+    <div style="font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); line-height:1.2;">Credit Card</div>
+    <div style="font-size:10px; font-weight:400; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,0.4); line-height:1.2; margin-bottom:48px;">Purchase Motivators</div>
     <input id="pw-input" type="password" placeholder="Password" autofocus
       style="width:100%; padding:14px 16px; font-size:14px; font-family:'Inter',sans-serif; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:0; color:#fff; text-align:center; margin-bottom:16px; outline:none; letter-spacing:1px;"
       onkeydown="if(event.key==='Enter')checkPw()" onfocus="this.style.borderColor='rgba(255,255,255,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,0.2)'">
@@ -328,12 +332,13 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 
 <nav id="nav">
   <div class="logo">MCD Partners</div>
-  <div class="logo-sub">Purchase Motivators</div>
+  <div class="logo-sub">Credit Card</div>
+  <div class="logo-sub" style="padding-top:0; padding-bottom:16px;">Purchase Motivators</div>
   <div style="padding:0 24px 12px; font-size:10px; color:#999; line-height:1.5; font-weight:400; letter-spacing:0.3px;">Which product images are most associated with spending categories — and most motivating to cardholders?</div>
   <div class="divider"></div>
   <div style="padding-top:8px;">
     <div class="research-blurb">Q1 2026 data shows consumers spending selectively — essentials hold steady while discretionary intent declines post-holiday.</div>
-    <a class="research-link" onclick="openResearch()">View Consumer Insights →</a>
+    <a class="research-link" onclick="openResearch()">View Consumer Sentiment Summary →</a>
   </div>
   <div class="divider"></div>
   <ul id="nav-list"></ul>
@@ -397,135 +402,135 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes", spend: "semi" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "toilet-paper.png", topChoices: ["clothes"], topLabel: "Clothes", spend: "semi" },
     types: {
-      "toilet paper": ["image_01.png"],
-      "tech": ["image_01.png","image_02.png"],
-      "grocery": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "clothes": ["image_01.png","image_02.png","image_03.png"],
-      "toys": ["image_01.png","image_02.png"],
-      "walmart box": ["image_01.png"],
-      "school": ["image_01.png","image_02.png"],
-      "pet": ["image_01.png","image_02.png"],
-      "baby": ["image_01.png","image_02.png"]
+      "toilet paper": [{f:"toilet-paper.png",l:"Toilet Paper"}],
+      "tech": [{f:"computer-monitor.png",l:"Computer Monitor"},{f:"headphones.png",l:"Headphones"}],
+      "grocery": [{f:"bananas.png",l:"Bananas"},{f:"eggs.png",l:"Eggs"},{f:"grocery-bag.png",l:"Grocery Bag"},{f:"milk-jug.png",l:"Milk Jug"}],
+      "clothes": [{f:"jeans.png",l:"Jeans"},{f:"sneakers.png",l:"Sneakers"},{f:"polo-shirt.png",l:"Polo Shirt"}],
+      "toys": [{f:"building-blocks.png",l:"Building Blocks"},{f:"game-controller.png",l:"Game Controller"}],
+      "walmart box": [{f:"walmart-box.png",l:"Walmart Box"}],
+      "school": [{f:"notebooks.png",l:"Notebooks"},{f:"tumbler-cup.png",l:"Tumbler Cup"}],
+      "pet": [{f:"dog-food.png",l:"Dog Food"},{f:"dog-toy-ball.png",l:"Dog Toy Ball"}],
+      "baby": [{f:"baby-bottle.png",l:"Baby Bottle"},{f:"pacifier.png",l:"Pacifier"}]
     }
   },
   "Amazon": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "image_01.png", topChoices: ["clothes"], topLabel: "Clothes, Headphones", spend: "semi" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Cell phone charger (32%)", winnerType: "electronics", winnerImage: "usb-c-cable.png", topChoices: ["clothes"], topLabel: "Clothes, Headphones", spend: "semi" },
     types: {
-      "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "box": ["image_01.png"],
-      "groceries": ["image_01.png","image_02.png","image_03.png"],
-      "electronics": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "toys": ["image_01.png","image_02.png"],
-      "beauty": ["image_01.png","image_02.png","image_03.png"],
-      "amazon products": ["image_01.png","image_02.png"]
+      "clothes": [{f:"t-shirt.png",l:"T-Shirt"},{f:"handbag.png",l:"Handbag"},{f:"sneakers.png",l:"Sneakers"},{f:"activewear-set.png",l:"Activewear Set"}],
+      "box": [{f:"amazon-box.png",l:"Amazon Box"}],
+      "groceries": [{f:"strawberries.png",l:"Strawberries"},{f:"mushrooms.png",l:"Mushrooms"},{f:"grocery-bag.png",l:"Grocery Bag"}],
+      "electronics": [{f:"usb-c-cable.png",l:"USB-C Cable"},{f:"tablet.png",l:"Tablet"},{f:"headphones.png",l:"Headphones"},{f:"robot-vacuum.png",l:"Robot Vacuum"}],
+      "toys": [{f:"toy-truck.png",l:"Toy Truck"},{f:"game-controller.png",l:"Game Controller"}],
+      "beauty": [{f:"face-serum.png",l:"Face Serum"},{f:"face-cream.png",l:"Face Cream"},{f:"makeup-palette.png",l:"Makeup Palette"}],
+      "amazon products": [{f:"e-reader.png",l:"E-Reader"},{f:"fire-tv-remote.png",l:"Fire TV Remote"}]
     }
   },
   "Gas & EV": {
-    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "image_02.png", topChoices: ["signifiers"], topLabel: "Fuel gauge", spend: "essential" },
+    meta: { mix: "4.5%", winner: "Gas pump (95%)", winnerType: "nozzle charger", winnerImage: "gas-nozzle.png", topChoices: ["signifiers"], topLabel: "Fuel gauge", spend: "essential" },
     types: {
-      "nozzle charger": ["image_01.png","image_02.png"],
-      "signifiers": ["image_01.png","image_02.png"],
-      "snacks": ["image_01.png","image_02.png","image_03.png"],
-      "drinks": ["image_01.png","image_02.png","image_03.png"]
+      "nozzle charger": [{f:"ev-charger.png",l:"EV Charger"},{f:"gas-nozzle.png",l:"Gas Nozzle"}],
+      "signifiers": [{f:"fuel-gauge.png",l:"Fuel Gauge"},{f:"car-keys.png",l:"Car Keys"}],
+      "snacks": [{f:"potato-chips.png",l:"Potato Chips"},{f:"gummy-worms.png",l:"Gummy Worms"},{f:"donut.png",l:"Donut"}],
+      "drinks": [{f:"soda-bottle.png",l:"Soda Bottle"},{f:"soda-can.png",l:"Soda Can"},{f:"coffee-cup.png",l:"Coffee Cup"}]
     }
   },
   "Target": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "image_02.png", topChoices: ["clothing"], topLabel: "Clothes", spend: "semi" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Dish soap (35%)", winnerType: "cleaning", winnerImage: "dish-soap.png", topChoices: ["clothing"], topLabel: "Clothes", spend: "semi" },
     types: {
-      "clothing": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "home decor": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "grocery": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "cleaning": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "kitchen": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "pet": ["image_01.png","image_02.png"]
+      "clothing": [{f:"handbag.png",l:"Handbag"},{f:"jeans.png",l:"Jeans"},{f:"cardigan.png",l:"Cardigan"},{f:"sneakers.png",l:"Sneakers"}],
+      "home decor": [{f:"bath-towels.png",l:"Bath Towels"},{f:"reed-diffuser.png",l:"Reed Diffuser"},{f:"desk-lamp.png",l:"Desk Lamp"},{f:"throw-pillow.png",l:"Throw Pillow"}],
+      "grocery": [{f:"bananas.png",l:"Bananas"},{f:"eggs.png",l:"Eggs"},{f:"grocery-bag.png",l:"Grocery Bag"},{f:"milk-jug.png",l:"Milk Jug"}],
+      "cleaning": [{f:"spray-bottle.png",l:"Spray Bottle"},{f:"dish-soap.png",l:"Dish Soap"},{f:"sponge.png",l:"Sponge"},{f:"laundry-detergent.png",l:"Laundry Detergent"}],
+      "kitchen": [{f:"moka-pot.png",l:"Moka Pot"},{f:"dinner-plates.png",l:"Dinner Plates"},{f:"blender.png",l:"Blender"},{f:"stand-mixer.png",l:"Stand Mixer"}],
+      "pet": [{f:"dog-food.png",l:"Dog Food"},{f:"dog-toy.png",l:"Dog Toy"}]
     }
   },
   "Grocery Stores": {
-    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "image_03.png", topChoices: ["grocery bag", "produce"], topLabel: "Grocery bag, Produce", spend: "essential" },
+    meta: { mix: "9.0%", winner: "Milk (54%)", winnerType: "dairy", winnerImage: "milk-gallon.png", topChoices: ["grocery bag", "produce"], topLabel: "Grocery bag, Produce", spend: "essential" },
     types: {
-      "meat": ["image_01.png","image_02.png","image_03.png"],
-      "dairy": ["image_01.png","image_02.png","image_03.png"],
-      "produce": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "grocery bag": ["image_01.png","image_02.png"],
-      "paper products": ["image_01.png","image_02.png","image_03.png"],
-      "detergent": ["image_01.png","image_02.png","image_03.png"],
-      "baby": ["image_01.png","image_02.png"]
+      "meat": [{f:"rotisserie-chicken.png",l:"Rotisserie Chicken"},{f:"bacon.png",l:"Bacon"},{f:"sushi-pack.png",l:"Sushi Pack"}],
+      "dairy": [{f:"butter.png",l:"Butter"},{f:"eggs.png",l:"Eggs"},{f:"milk-gallon.png",l:"Milk Gallon"}],
+      "produce": [{f:"strawberries.png",l:"Strawberries"},{f:"avocado.png",l:"Avocado"},{f:"orange.png",l:"Orange"},{f:"bananas.png",l:"Bananas"}],
+      "grocery bag": [{f:"paper-grocery-bag.png",l:"Paper Grocery Bag"},{f:"reusable-grocery-bag.png",l:"Reusable Grocery Bag"}],
+      "paper products": [{f:"toilet-paper.png",l:"Toilet Paper"},{f:"tissue-box.png",l:"Tissue Box"},{f:"paper-towels.png",l:"Paper Towels"}],
+      "detergent": [{f:"spray-cleaner.png",l:"Spray Cleaner"},{f:"laundry-detergent.png",l:"Laundry Detergent"},{f:"fabric-softener.png",l:"Fabric Softener"}],
+      "baby": [{f:"baby-bottle.png",l:"Baby Bottle"},{f:"baby-food.png",l:"Baby Food"}]
     }
   },
   "Home Improvement": {
-    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "image_01.png", topChoices: ["tools"], topLabel: "Toolbox", spend: "discretionary" },
+    meta: { mix: "2.9%", winner: "Paint (41%)", winnerType: "paint", winnerImage: "paint-can.png", topChoices: ["tools"], topLabel: "Toolbox", spend: "discretionary" },
     types: {
-      "paint": ["image_01.png","image_02.png","image_03.png"],
-      "tools": ["image_01.png","image_02.png","image_03.png"],
-      "wood": ["image_01.png","image_02.png"],
-      "gardening": ["image_01.png","image_02.png","image_03.png"]
+      "paint": [{f:"paint-can.png",l:"Paint Can"},{f:"paint-can-2.png",l:"Paint Can"},{f:"paint-brush.png",l:"Paint Brush"}],
+      "tools": [{f:"hammer.png",l:"Hammer"},{f:"power-drill.png",l:"Power Drill"},{f:"toolbox.png",l:"Toolbox"}],
+      "wood": [{f:"birdhouse.png",l:"Birdhouse"},{f:"lumber.png",l:"Lumber"}],
+      "gardening": [{f:"potted-flower.png",l:"Potted Flower"},{f:"watering-can.png",l:"Watering Can"},{f:"garden-trowel.png",l:"Garden Trowel"}]
     }
   },
   "Restaurants": {
-    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "image_04.png", topChoices: ["salad bowls", "drinks"], topLabel: "Salad, Sandwich, Soda", spend: "discretionary" },
+    meta: { mix: "9.2%", winner: "Burger (51%)", winnerType: "fast casual", winnerImage: "cheeseburger.png", topChoices: ["salad bowls", "drinks"], topLabel: "Salad, Sandwich, Soda", spend: "discretionary" },
     types: {
-      "table setting": ["image_01.png","image_02.png"],
-      "fast casual": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "sit down": ["image_01.png","image_02.png","image_03.png"],
-      "drinks": ["image_01.png","image_02.png","image_03.png"],
-      "sweets": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "salad bowls": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "coffee matcha": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "pizza": ["image_01.png","image_02.png"],
-      "trendy": ["image_01.png","image_02.png","image_03.png","image_04.png"]
+      "table setting": [{f:"menu.png",l:"Menu"},{f:"silverware.png",l:"Silverware"}],
+      "fast casual": [{f:"french-fries.png",l:"French Fries"},{f:"buffalo-wings.png",l:"Buffalo Wings"},{f:"sub-sandwich.png",l:"Sub Sandwich"},{f:"cheeseburger.png",l:"Cheeseburger"}],
+      "sit down": [{f:"sliced-steak.png",l:"Sliced Steak"},{f:"croquettes.png",l:"Croquettes"},{f:"sushi-platter.png",l:"Sushi Platter"}],
+      "drinks": [{f:"iced-tea.png",l:"Iced Tea"},{f:"cola.png",l:"Cola"},{f:"green-smoothie.png",l:"Green Smoothie"}],
+      "sweets": [{f:"chocolate-cake.png",l:"Chocolate Cake"},{f:"macarons.png",l:"Macarons"},{f:"sprinkle-donut.png",l:"Sprinkle Donut"},{f:"ice-cream.png",l:"Ice Cream"}],
+      "salad bowls": [{f:"green-salad.png",l:"Green Salad"},{f:"poke-bowl.png",l:"Poke Bowl"},{f:"garden-salad.png",l:"Garden Salad"},{f:"salmon-poke-bowl.png",l:"Salmon Poke Bowl"}],
+      "coffee matcha": [{f:"iced-latte.png",l:"Iced Latte"},{f:"matcha-drink.png",l:"Matcha Drink"},{f:"matcha-latte.png",l:"Matcha Latte"},{f:"latte.png",l:"Latte"}],
+      "pizza": [{f:"pepperoni-pizza.png",l:"Pepperoni Pizza"},{f:"pepperoni-pizza-2.png",l:"Pepperoni Pizza"}],
+      "trendy": [{f:"avocado-toast.png",l:"Avocado Toast"},{f:"matcha-latte.png",l:"Matcha Latte"},{f:"tacos.png",l:"Tacos"},{f:"smoothie-bowl.png",l:"Smoothie Bowl"}]
     }
   },
   "Travel": {
     meta: { mix: "6.0%", winner: "Not tested", spend: "discretionary" },
     types: {
-      "suitcase": ["image_01.png","image_02.png"],
-      "passport": ["image_01.png"],
-      "plane tickets": ["image_01.png","image_02.png"],
-      "summer vacation": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "winter vacation": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "backpack": ["image_01.png"],
-      "car keys": ["image_01.png"],
-      "camera": ["image_01.png","image_02.png"]
+      "suitcase": [{f:"suitcase.png",l:"Suitcase"},{f:"suitcase-2.png",l:"Suitcase"}],
+      "passport": [{f:"passport.png",l:"Passport"}],
+      "plane tickets": [{f:"boarding-pass.png",l:"Boarding Pass"},{f:"airplane-model.png",l:"Airplane Model"}],
+      "summer vacation": [{f:"sunscreen.png",l:"Sunscreen"},{f:"straw-hat.png",l:"Straw Hat"},{f:"beach-accessories.png",l:"Beach Accessories"},{f:"sunglasses.png",l:"Sunglasses"}],
+      "winter vacation": [{f:"ski-boots.png",l:"Ski Boots"},{f:"skis-and-poles.png",l:"Skis & Poles"},{f:"ski-goggles.png",l:"Ski Goggles"},{f:"winter-gloves.png",l:"Winter Gloves"}],
+      "backpack": [{f:"backpack.png",l:"Backpack"}],
+      "car keys": [{f:"car-keys.png",l:"Car Keys"}],
+      "camera": [{f:"instant-camera.png",l:"Instant Camera"},{f:"dslr-camera.png",l:"DSLR Camera"}]
     }
   },
   "Discount Stores": {
-    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "image_02.png", topChoices: ["school"], topLabel: "Snacks, Pens", spend: "semi" },
+    meta: { mix: "2.1%", winner: "Candy (74%)", winnerType: "snacks", winnerImage: "gummy-worms.png", topChoices: ["school"], topLabel: "Snacks, Pens", spend: "semi" },
     types: {
-      "snacks": ["image_01.png","image_02.png"],
-      "toys": ["image_01.png","image_02.png"],
-      "school": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "party": ["image_01.png"],
-      "electronics": ["image_01.png"]
+      "snacks": [{f:"potato-chips.png",l:"Potato Chips"},{f:"gummy-worms.png",l:"Gummy Worms"}],
+      "toys": [{f:"stuffed-octopus.png",l:"Stuffed Octopus"},{f:"football.png",l:"Football"}],
+      "school": [{f:"highlighters.png",l:"Highlighters"},{f:"pencil-case.png",l:"Pencil Case"},{f:"school-backpack.png",l:"School Backpack"},{f:"notebooks.png",l:"Notebooks"}],
+      "party": [{f:"party-hat.png",l:"Party Hat"}],
+      "electronics": [{f:"usb-cable.png",l:"USB Cable"}]
     }
   },
   "Drug Stores": {
     meta: { mix: "2.1%", winner: "N/A", spend: "semi" },
     types: {
-      "pharmacy": ["image_01.png","image_02.png","image_03.png"],
-      "groceries": ["image_01.png","image_02.png","image_03.png"],
-      "snacks": ["image_01.png","image_02.png"],
-      "skin care": ["image_01.png","image_02.png","image_03.png"]
+      "pharmacy": [{f:"pill-bottle.png",l:"Pill Bottle"},{f:"supplement-bottle.png",l:"Supplement Bottle"},{f:"capsules.png",l:"Capsules"}],
+      "groceries": [{f:"bananas.png",l:"Bananas"},{f:"eggs.png",l:"Eggs"},{f:"milk-jug.png",l:"Milk Jug"}],
+      "snacks": [{f:"potato-chips.png",l:"Potato Chips"},{f:"gummy-worms.png",l:"Gummy Worms"}],
+      "skin care": [{f:"face-serum.png",l:"Face Serum"},{f:"face-cream.png",l:"Face Cream"},{f:"makeup-palette.png",l:"Makeup Palette"}]
     }
   },
   "Department Stores": {
-    meta: { mix: "4.5%", winner: "Clothes (89%)", winnerType: "clothes", winnerImage: "image_01.png", spend: "discretionary" },
+    meta: { mix: "4.5%", winner: "Clothes (89%)", winnerType: "clothes", winnerImage: "wrap-dress.png", spend: "discretionary" },
     types: {
-      "clothes": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "candles": ["image_01.png","image_02.png"],
-      "accessories": ["image_01.png","image_02.png","image_03.png","image_04.png"],
-      "photo frames": ["image_01.png"]
+      "clothes": [{f:"wrap-dress.png",l:"Wrap Dress"},{f:"button-up-shirt.png",l:"Button-Up Shirt"},{f:"knit-sweater.png",l:"Knit Sweater"},{f:"loafers.png",l:"Loafers"}],
+      "candles": [{f:"candle.png",l:"Candle"},{f:"reed-diffuser.png",l:"Reed Diffuser"}],
+      "accessories": [{f:"wristwatch.png",l:"Wristwatch"},{f:"straw-hat.png",l:"Straw Hat"},{f:"tote-bag.png",l:"Tote Bag"},{f:"sunglasses.png",l:"Sunglasses"}],
+      "photo frames": [{f:"photo-frame.png",l:"Photo Frame"}]
     }
   },
   "Telecom Utilities": {
-    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "image_01.png", topChoices: ["tv"], topLabel: "TV", spend: "essential" },
+    meta: { mix: "4.4%", winner: "Wifi (76%)", winnerType: "wifi", winnerImage: "ethernet-cable.png", topChoices: ["tv"], topLabel: "TV", spend: "essential" },
     types: {
-      "wifi": ["image_01.png","image_02.png"],
-      "electric": ["image_01.png"],
-      "bills": ["image_01.png"],
-      "tv": ["image_01.png","image_02.png"],
-      "electronics": ["image_01.png","image_02.png","image_03.png","image_04.png"]
+      "wifi": [{f:"ethernet-cable.png",l:"Ethernet Cable"},{f:"wifi-router.png",l:"WiFi Router"}],
+      "electric": [{f:"light-bulb.png",l:"Light Bulb"}],
+      "bills": [{f:"utility-bill.png",l:"Utility Bill"}],
+      "tv": [{f:"tv-remote.png",l:"TV Remote"},{f:"monitor.png",l:"Monitor"}],
+      "electronics": [{f:"smartphone.png",l:"Smartphone"},{f:"laptop.png",l:"Laptop"},{f:"keyboard.png",l:"Keyboard"},{f:"computer-mouse.png",l:"Computer Mouse"}]
     }
   }
 };
@@ -542,7 +547,7 @@ sortedCats.forEach(cat => {
   const spendClass = DATA[cat].meta.spend === 'essential' ? 'spend-essential' : DATA[cat].meta.spend === 'semi' ? 'spend-semi' : 'spend-discretionary';
   const spendLbl = DATA[cat].meta.spend === 'essential' ? 'Essential' : DATA[cat].meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary';
   const tipClass = DATA[cat].meta.spend === 'essential' ? 'tip-essential' : DATA[cat].meta.spend === 'semi' ? 'tip-semi' : 'tip-discretionary';
-  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="cat-name">${cat}</span><span class="mix">${DATA[cat].meta.mix}</span><span class="count">${totalImages}</span><span class="spend-tip ${tipClass}">${spendLbl}</span>`;
+  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="spend-tip ${tipClass}">${spendLbl}</span><span class="cat-name">${cat}</span><span class="mix">${DATA[cat].meta.mix}</span><span class="count">${totalImages}</span>`;
   li.dataset.cat = cat;
   li.onclick = () => selectCategory(cat);
   navList.appendChild(li);
@@ -571,10 +576,10 @@ function selectCategory(cat) {
     </div>${d.meta.spend ? `
     <div style="margin-bottom:16px;"><span class="spend-tag ${spendCls}">${spendLabel}</span></div>` : ''}
     <div class="category-meta">
-      <span>Client Confidential MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:10px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
+      <span>Client MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:10px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
     </div>
     <div class="category-meta" style="margin-bottom:24px;">
-      <span><span class="method-q" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#e0e0e0;color:#666;font-size:7px;font-weight:700;cursor:pointer;vertical-align:middle;position:relative;top:-1px;margin-right:3px;" onclick="document.getElementById('method-tip').style.display=document.getElementById('method-tip').style.display==='block'?'none':'block'" onmouseenter="document.getElementById('method-tip').style.display='block'" onmouseleave="document.getElementById('method-tip').style.display='none'">?</span>Highest Association: <strong>${d.meta.winner} ★</strong></span>${d.meta.topLabel ? `
+      <span><span class="method-q" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#e0e0e0;color:#666;font-size:7px;font-weight:700;cursor:pointer;vertical-align:middle;position:relative;top:-1px;margin-right:3px;" onclick="positionTip(this)" onmouseenter="positionTip(this)" onmouseleave="document.getElementById('method-tip').style.display='none'">?</span>Highest Association: <strong>${d.meta.winner} ★</strong></span>${d.meta.topLabel ? `
       <span>Solid Bets: <strong>${d.meta.topLabel}</strong></span>` : ''}
     </div>
     <div class="cat-nav" id="cat-nav"></div>
@@ -603,8 +608,12 @@ function selectCategory(cat) {
   entries.forEach(([typeName, images]) => {
     // Reorder images so winner image is first in the winner column
     let sortedImages = [...images];
-    if (typeName === winnerType && winnerImage && sortedImages.includes(winnerImage)) {
-      sortedImages = [winnerImage, ...sortedImages.filter(img => img !== winnerImage)];
+    if (typeName === winnerType && winnerImage) {
+      const winIdx = sortedImages.findIndex(img => img.f === winnerImage);
+      if (winIdx > 0) {
+        const [winner] = sortedImages.splice(winIdx, 1);
+        sortedImages.unshift(winner);
+      }
     }
 
     html += `<div class="type-column">`;
@@ -612,11 +621,12 @@ function selectCategory(cat) {
     html += `<div class="type-title">${typeName}${typeName === winnerType ? ' ★' : ''}</div>`;
     html += `<div class="image-stack">`;
     sortedImages.forEach((img, i) => {
-      const src = encodeURI(`${cat}/${typeName}/${img}`);
+      const src = encodeURI(`${cat}/${typeName}/${img.f}`);
+      const label = img.l;
       html += `
-        <div class="image-card${typeName === winnerType && i === 0 ? ' winner' : ''}" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${sortedImages.length})">
-          <img src="${src}" alt="${typeName} ${i + 1}" loading="lazy">
-          <div class="label">${i + 1} / ${sortedImages.length}</div>
+        <div class="image-card${typeName === winnerType && i === 0 ? ' winner' : ''}" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${sortedImages.length}, '${label.replace(/'/g, "\\'")}')">
+          <img src="${src}" alt="${label}" loading="lazy">
+          <div class="label">${label}<br><span style="color:#ccc">${i + 1} / ${sortedImages.length}</span></div>
         </div>
       `;
     });
@@ -653,11 +663,20 @@ function selectCategory(cat) {
   });
 }
 
-function openLightbox(src, cat, type, num, total) {
+function positionTip(el) {
+  const tip = document.getElementById('method-tip');
+  const rect = el.getBoundingClientRect();
+  tip.style.display = 'block';
+  tip.style.position = 'fixed';
+  tip.style.left = (rect.left + rect.width + 8) + 'px';
+  tip.style.top = (rect.top - 8) + 'px';
+}
+
+function openLightbox(src, cat, type, num, total, label) {
   event.stopPropagation();
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
-  document.getElementById('lightbox-meta').textContent = `${cat}  ·  ${type}  ·  ${num} of ${total}`;
+  document.getElementById('lightbox-meta').textContent = `${label}  ·  ${cat}  ·  ${type}  ·  ${num} of ${total}`;
   lb.classList.add('open');
 }
 
