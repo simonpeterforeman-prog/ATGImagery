@@ -134,7 +134,7 @@
     display: flex; flex-direction: column; gap: 10px;
   }
   .image-card {
-    background: #f7f7f7; border-radius: 4px; overflow: hidden;
+    background: #f7f7f7; border-radius: 4px; overflow: visible;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer; border: 1px solid #eee;
     position: relative;
@@ -283,6 +283,7 @@
       mask-image: none;
     }
     .type-column { min-width: 130px; max-width: 150px; }
+    .dl-btn { opacity: 0.5; }
     .spend-tag { margin-bottom: 8px; }
     .scroll-hint {
       display: block; text-align: center;
