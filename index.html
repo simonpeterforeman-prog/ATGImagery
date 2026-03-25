@@ -561,8 +561,15 @@ function selectCategory(cat) {
       <span>MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:11px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
     </div>
     <div class="category-meta" style="margin-bottom:24px;">
-      <span>Previous Force Choice Winner: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
-      <span>Other Top Choices: <strong>${d.meta.topLabel}</strong></span>` : ''}
+      <span><span class="method-tooltip-wrap" style="position:relative;display:inline;">
+        <span class="method-q" style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#e0e0e0;color:#666;font-size:9px;font-weight:700;cursor:pointer;margin-right:6px;vertical-align:middle;position:relative;top:-1px;" onmouseenter="this.nextElementSibling.style.display='block'" onmouseleave="this.nextElementSibling.style.display='none'" ontouchstart="event.preventDefault();const t=this.nextElementSibling;t.style.display=t.style.display==='block'?'none':'block'">?</span>
+        <span class="method-tooltip" style="display:none;position:absolute;left:24px;top:-8px;width:280px;background:#1a1a1a;color:#fff;padding:14px 16px;font-size:11px;line-height:1.6;letter-spacing:0;text-transform:none;font-weight:400;border-radius:4px;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,0.2);">
+          <strong style="font-weight:700;display:block;margin-bottom:6px;">Methodology</strong>
+          500+ consumers surveyed across 11 reward categories. Tested unaided word association, image association ratings, and force choice for best-fit imagery. Everyday purchase items consistently outperformed big-ticket or niche products.
+          <br><br><em style="color:#999;font-style:italic;">Source: Discover Consumer Insights, 2023</em>
+        </span>
+      </span>Highest Association: <strong>${d.meta.winner}</strong></span>${d.meta.topLabel ? `
+      <span>Solid Bets: <strong>${d.meta.topLabel}</strong></span>` : ''}
     </div>
     <div class="cat-nav" id="cat-nav"></div>
     <div class="scroll-hint" id="scroll-hint">Swipe →</div>
