@@ -57,16 +57,21 @@
   }
   .spend-tip {
     display: none; position: absolute; left: 24px; top: calc(100% - 2px);
-    background: #fff; color: #888; font-size: 9px; font-weight: 500;
-    padding: 3px 8px; border-radius: 3px; white-space: nowrap;
-    letter-spacing: 0.3px; z-index: 60;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    font-size: 8px; font-weight: 600;
+    padding: 2px 6px; border-radius: 2px; white-space: nowrap;
+    letter-spacing: 0.5px; text-transform: uppercase; z-index: 60;
     pointer-events: none;
   }
   .spend-tip::before {
     content: ''; position: absolute; left: 8px; top: -6px;
-    border: 3px solid transparent; border-bottom-color: #fff;
+    border: 3px solid transparent;
   }
+  .spend-tip.tip-essential { background: #E8F5E9; color: #2E7D32; }
+  .spend-tip.tip-essential::before { border-bottom-color: #E8F5E9; }
+  .spend-tip.tip-semi { background: #FFF8E1; color: #F57F17; }
+  .spend-tip.tip-semi::before { border-bottom-color: #FFF8E1; }
+  .spend-tip.tip-discretionary { background: #FFEBEE; color: #C62828; }
+  .spend-tip.tip-discretionary::before { border-bottom-color: #FFEBEE; }
   .spend-essential { background: #4CAF50; }
   .spend-semi { background: #FFB300; }
   .spend-discretionary { background: #EF5350; }
@@ -536,7 +541,8 @@ sortedCats.forEach(cat => {
   const li = document.createElement('li');
   const spendClass = DATA[cat].meta.spend === 'essential' ? 'spend-essential' : DATA[cat].meta.spend === 'semi' ? 'spend-semi' : 'spend-discretionary';
   const spendLbl = DATA[cat].meta.spend === 'essential' ? 'Essential' : DATA[cat].meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary';
-  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="cat-name">${cat}</span><span class="mix">${DATA[cat].meta.mix}</span><span class="count">${totalImages}</span><span class="spend-tip">${spendLbl}</span>`;
+  const tipClass = DATA[cat].meta.spend === 'essential' ? 'tip-essential' : DATA[cat].meta.spend === 'semi' ? 'tip-semi' : 'tip-discretionary';
+  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="cat-name">${cat}</span><span class="mix">${DATA[cat].meta.mix}</span><span class="count">${totalImages}</span><span class="spend-tip ${tipClass}">${spendLbl}</span>`;
   li.dataset.cat = cat;
   li.onclick = () => selectCategory(cat);
   navList.appendChild(li);
