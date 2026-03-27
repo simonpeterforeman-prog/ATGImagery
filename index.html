@@ -359,7 +359,7 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
   <div class="logo">MCD Partners</div>
   <div class="logo-sub">Credit Card</div>
   <div class="logo-sub" style="padding-top:0; padding-bottom:16px;">Purchase Imagery</div>
-  <div style="padding:0 24px 12px; font-size:10px; color:#999; line-height:1.5; font-weight:400; letter-spacing:0.3px;">Which product images are most associated with spending categories — and most motivating to cardholders?</div>
+  <div class="nav-blurb" style="padding:0 24px 12px; font-size:10px; color:#999; line-height:1.5; font-weight:400; letter-spacing:0.3px;">Which product images are most associated with spending categories — and most motivating to cardholders?</div>
   <div class="divider"></div>
   <ul id="nav-list"></ul>
   <div class="divider"></div>
@@ -637,6 +637,8 @@ const CLIENT_VIEW = new URLSearchParams(window.location.search).get('view') === 
 // In client view, hide research blurb and sort alphabetically
 if (CLIENT_VIEW) {
   document.querySelectorAll('.research-blurb, .research-link').forEach(el => el.style.display = 'none');
+  const blurb = document.querySelector('.nav-blurb');
+  if (blurb) blurb.textContent = 'Product images selected for strong category association and cardholder purchase motivation.';
 }
 
 // Build nav — sorted by MCC sales mix descending (or alphabetically for client)
