@@ -148,6 +148,11 @@
   .dl-btn svg { width: 13px; height: 13px; stroke: #999; fill: none; stroke-width: 2; }
   .image-card:hover .dl-btn { opacity: 1; }
   .image-card:hover .dl-btn svg { stroke: #666; }
+  .unlicensed-tag {
+    position: absolute; top: 6px; left: 6px; background: rgba(255,60,60,0.85); color: #fff;
+    font-size: 7px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 2px 5px; border-radius: 3px; z-index: 5;
+  }
   .image-card:hover {
     transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1);
   }
@@ -422,9 +427,9 @@ if (sessionStorage.getItem('atg-auth') === 'true') {
 <script>
 const DATA = {
   "Walmart": {
-    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "toilet paper", winnerImage: "toilet-paper.png", topChoices: ["clothes"], topLabel: "Clothes", spend: "semi" },
+    meta: { mix: "14.1%", mixNote: "shared across Walmart, Amazon & Target", winner: "Toilet paper (76%)", winnerType: "home essentials", winnerImage: "toilet-paper.png", topChoices: ["clothes"], topLabel: "Clothes", spend: "semi" },
     types: {
-      "toilet paper": [{f:"toilet-paper.png",l:"Toilet Paper"}],
+      "home essentials": [{f:"toilet-paper.png",l:"Toilet Paper"},{f:"cleaning-spray.png",l:"Cleaning Spray"},{f:"paper-towels.png",l:"Paper Towels"}],
       "tech": [{f:"computer-monitor.png",l:"Computer Monitor"},{f:"headphones.png",l:"Headphones"}],
       "grocery": [{f:"bananas.png",l:"Bananas"},{f:"eggs.png",l:"Eggs"},{f:"grocery-bag.png",l:"Grocery Bag"},{f:"milk-jug.png",l:"Milk Jug"}],
       "clothes": [{f:"jeans.png",l:"Jeans"},{f:"sneakers.png",l:"Sneakers"},{f:"polo-shirt.png",l:"Polo Shirt"}],
@@ -499,7 +504,8 @@ const DATA = {
       "salad bowls": [{f:"green-salad.png",l:"Green Salad"},{f:"poke-bowl.png",l:"Poke Bowl"},{f:"garden-salad.png",l:"Garden Salad"},{f:"salmon-poke-bowl.png",l:"Salmon Poke Bowl"}],
       "coffee matcha": [{f:"iced-latte.png",l:"Iced Latte"},{f:"matcha-drink.png",l:"Matcha Drink"},{f:"matcha-latte.png",l:"Matcha Latte"},{f:"latte.png",l:"Latte"}],
       "pizza": [{f:"pepperoni-pizza.png",l:"Pepperoni Pizza"},{f:"pepperoni-pizza-2.png",l:"Pepperoni Pizza"}],
-      "trendy": [{f:"avocado-toast.png",l:"Avocado Toast"},{f:"matcha-latte.png",l:"Matcha Latte"},{f:"tacos.png",l:"Tacos"},{f:"smoothie-bowl.png",l:"Smoothie Bowl"}]
+      "trendy": [{f:"avocado-toast.png",l:"Avocado Toast"},{f:"matcha-latte.png",l:"Matcha Latte"},{f:"tacos.png",l:"Tacos"},{f:"smoothie-bowl.png",l:"Smoothie Bowl"}],
+      "takeout": [{f:"chinese-takeout.png",l:"Chinese Takeout"},{f:"takeout-bag.png",l:"Takeout Bag"},{f:"poke-bowl.png",l:"Poke Bowl"},{f:"enchiladas.png",l:"Enchiladas"}]
     }
   },
   "Travel": {
@@ -540,7 +546,10 @@ const DATA = {
       "clothes": [{f:"wrap-dress.png",l:"Wrap Dress"},{f:"button-up-shirt.png",l:"Button-Up Shirt"},{f:"knit-sweater.png",l:"Knit Sweater"},{f:"loafers.png",l:"Loafers"}],
       "candles": [{f:"candle.png",l:"Candle"},{f:"reed-diffuser.png",l:"Reed Diffuser"}],
       "accessories": [{f:"wristwatch.png",l:"Wristwatch"},{f:"straw-hat.png",l:"Straw Hat"},{f:"tote-bag.png",l:"Tote Bag"},{f:"sunglasses.png",l:"Sunglasses"}],
-      "photo frames": [{f:"photo-frame.png",l:"Photo Frame"}]
+      "photo frames": [{f:"photo-frame.png",l:"Photo Frame"}],
+      "beauty": [{f:"lotion-pump.png",l:"Lotion Pump"},{f:"serum-dropper.png",l:"Serum Dropper"},{f:"nail-polish.png",l:"Nail Polish"},{f:"makeup-palette.png",l:"Makeup Palette"}],
+      "linens bath": [{f:"bath-towels.png",l:"Bath Towels"},{f:"throw-pillow.png",l:"Throw Pillow"},{f:"throw-blanket.png",l:"Throw Blanket"},{f:"linen-napkin.png",l:"Linen Napkin"}],
+      "perfume": [{f:"perfume-bottle.png",l:"Perfume Bottle"},{f:"perfume-bottle-2.png",l:"Perfume Bottle"},{f:"cologne-bottle.png",l:"Cologne Bottle"}]
     }
   },
   "Telecom Utilities": {
@@ -563,6 +572,62 @@ const DATA = {
     }
   }
 };
+
+// Unlicensed images — matched from notpurchased screenshots
+const UNLICENSED = new Set([
+  "Walmart/home essentials/toilet-paper.png",
+  "Walmart/toys/building-blocks.png",
+  "Walmart/baby/baby-bottle.png",
+  "Walmart/baby/pacifier.png",
+  "Amazon/electronics/usb-c-cable.png",
+  "Amazon/clothes/t-shirt.png",
+  "Amazon/clothes/handbag.png",
+  "Gas & EV/snacks/potato-chips.png",
+  "Gas & EV/snacks/gummy-worms.png",
+  "Gas & EV/drinks/soda-can.png",
+  "Gas & EV/drinks/soda-bottle.png",
+  "Gas & EV/drinks/coffee-cup.png",
+  "Target/clothing/cardigan.png",
+  "Target/clothing/jeans.png",
+  "Target/clothing/handbag.png",
+  "Target/home decor/bath-towels.png",
+  "Grocery Stores/baby/baby-food.png",
+  "Grocery Stores/meat/rotisserie-chicken.png",
+  "Grocery Stores/meat/bacon.png",
+  "Grocery Stores/dairy/butter.png",
+  "Grocery Stores/produce/orange.png",
+  "Grocery Stores/produce/avocado.png",
+  "Home Improvement/tools/toolbox.png",
+  "Home Improvement/wood/lumber.png",
+  "Home Improvement/wood/birdhouse.png",
+  "Home Improvement/gardening/potted-flower.png",
+  "Restaurants/table setting/menu.png",
+  "Restaurants/fast casual/sub-sandwich.png",
+  "Restaurants/fast casual/buffalo-wings.png",
+  "Restaurants/drinks/cola.png",
+  "Restaurants/coffee matcha/iced-latte.png",
+  "Restaurants/coffee matcha/matcha-drink.png",
+  "Restaurants/takeout/chinese-takeout.png",
+  "Restaurants/takeout/takeout-bag.png",
+  "Discount Stores/party/party-hat.png",
+  "Discount Stores/party/noise-maker.png",
+  "Discount Stores/party/balloons.png",
+  "Discount Stores/electronics/usb-cable.png",
+  "Discount Stores/electronics/headphones.png",
+  "Discount Stores/school/highlighters.png",
+  "Discount Stores/school/pencil-case.png",
+  "Discount Stores/snacks/potato-chips.png",
+  "Discount Stores/snacks/gummy-worms.png",
+  "Drug Stores/snacks/potato-chips.png",
+  "Drug Stores/snacks/gummy-worms.png",
+  "Department Stores/clothes/wrap-dress.png",
+  "Department Stores/candles/candle.png",
+  "Department Stores/photo frames/photo-frame.png",
+  "Department Stores/perfume/perfume-bottle.png",
+  "Department Stores/perfume/perfume-bottle-2.png",
+  "Department Stores/perfume/cologne-bottle.png",
+  "Department Stores/linens bath/bath-towels.png"
+]);
 
 const navList = document.getElementById('nav-list');
 const content = document.getElementById('content');
@@ -651,9 +716,12 @@ function selectCategory(cat) {
     html += `<div class="image-stack">`;
     sortedImages.forEach((img, i) => {
       const src = encodeURI(`${cat}/${typeName}/${img.f}`);
+      const rawPath = `${cat}/${typeName}/${img.f}`;
       const label = img.l;
+      const isUnlicensed = UNLICENSED.has(rawPath);
       html += `
-        <div class="image-card${typeName === winnerType && i === 0 ? ' winner' : ''}" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${sortedImages.length}, '${label.replace(/'/g, "\\'")}')">
+        <div class="image-card${typeName === winnerType && i === 0 ? ' winner' : ''}" onclick="openLightbox('${src}', '${cat}', '${typeName}', ${i + 1}, ${sortedImages.length}, '${label.replace(/'/g, "\\'")}', ${isUnlicensed})">
+          ${isUnlicensed ? '<span class="unlicensed-tag">Unlicensed</span>' : ''}
           <a class="dl-btn" onclick="event.stopPropagation()" href="${src}" download="${img.f}" title="Download"><svg viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4M4 19h16" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <img src="${src}" alt="${label}" loading="lazy">
           <div class="label">${label}<br><span style="color:#ccc">${i + 1} / ${sortedImages.length}</span></div>
@@ -702,12 +770,13 @@ function positionTip(el) {
   tip.style.top = (rect.top - 8) + 'px';
 }
 
-function openLightbox(src, cat, type, num, total, label) {
+function openLightbox(src, cat, type, num, total, label, unlicensed) {
   event.stopPropagation();
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
   const fname = src.split('/').pop();
-  document.getElementById('lightbox-meta').innerHTML = `${label}  ·  ${cat}  ·  ${type}  ·  ${num} of ${total}<br><a class="lightbox-dl" href="${src}" download="${fname}" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4M4 19h16" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</a>`;
+  const unlicTag = unlicensed ? '<span style="background:rgba(255,60,60,0.85);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-right:8px;">Unlicensed</span>' : '';
+  document.getElementById('lightbox-meta').innerHTML = `${unlicTag}${label}  ·  ${cat}  ·  ${type}  ·  ${num} of ${total}<br><a class="lightbox-dl" href="${src}" download="${fname}" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24"><path d="M12 3v13m0 0l-4-4m4 4l4-4M4 19h16" stroke-linecap="round" stroke-linejoin="round"/></svg>Download</a>`;
   lb.classList.add('open');
 }
 
