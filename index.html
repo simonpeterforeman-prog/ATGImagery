@@ -632,16 +632,22 @@ const UNLICENSED = new Set([
 const navList = document.getElementById('nav-list');
 const content = document.getElementById('content');
 let activeCategory = null;
+const CLIENT_VIEW = new URLSearchParams(window.location.search).get('view') === 'client';
 
-// Build nav — sorted by MCC sales mix descending
-const sortedCats = Object.keys(DATA).sort((a, b) => parseFloat(b && DATA[b].meta.mix) - parseFloat(a && DATA[a].meta.mix));
+// In client view, hide research blurb and sort alphabetically
+if (CLIENT_VIEW) {
+  document.querySelectorAll('.research-blurb, .research-link').forEach(el => el.style.display = 'none');
+}
+
+// Build nav — sorted by MCC sales mix descending (or alphabetically for client)
+const sortedCats = Object.keys(DATA).sort((a, b) => CLIENT_VIEW ? a.localeCompare(b) : parseFloat(b && DATA[b].meta.mix) - parseFloat(a && DATA[a].meta.mix));
 sortedCats.forEach(cat => {
   const totalImages = Object.values(DATA[cat].types).reduce((sum, arr) => sum + arr.length, 0);
   const li = document.createElement('li');
   const spendClass = DATA[cat].meta.spend === 'essential' ? 'spend-essential' : DATA[cat].meta.spend === 'semi' ? 'spend-semi' : 'spend-discretionary';
   const spendLbl = DATA[cat].meta.spend === 'essential' ? 'Essential' : DATA[cat].meta.spend === 'semi' ? 'Semi-discretionary' : 'Discretionary';
   const tipClass = DATA[cat].meta.spend === 'essential' ? 'tip-essential' : DATA[cat].meta.spend === 'semi' ? 'tip-semi' : 'tip-discretionary';
-  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="spend-tip ${tipClass}">${spendLbl}</span><span class="cat-name">${cat}</span><span class="mix">${DATA[cat].meta.mix}</span><span class="count">${totalImages}</span>`;
+  li.innerHTML = `<span class="spend-dot ${spendClass}"></span><span class="spend-tip ${tipClass}">${spendLbl}</span><span class="cat-name">${cat}</span>${CLIENT_VIEW ? '' : `<span class="mix">${DATA[cat].meta.mix}</span>`}<span class="count">${totalImages}</span>`;
   li.dataset.cat = cat;
   li.onclick = () => selectCategory(cat);
   navList.appendChild(li);
@@ -669,13 +675,13 @@ function selectCategory(cat) {
       <span style="font-size:10px; color:#999; text-transform:uppercase; letter-spacing:1px; font-weight:600; white-space:nowrap;">${typeCount} Image Types</span>
     </div>${d.meta.spend ? `
     <div style="margin-bottom:16px;"><span class="spend-tag ${spendCls}">${spendLabel}</span></div>` : ''}
-    <div class="category-meta">
+    ${CLIENT_VIEW ? '' : `<div class="category-meta">
       <span>Client MCC Sales Mix: <strong>${d.meta.mix}</strong>${d.meta.mixNote ? ' <em style="font-style:italic;color:#bbb;text-transform:none;letter-spacing:0;font-size:10px;">(' + d.meta.mixNote + ')</em>' : ''}</span>
     </div>
     <div class="category-meta" style="margin-bottom:24px;">
       <span><span class="method-q" style="display:inline-flex;align-items:center;justify-content:center;width:12px;height:12px;border-radius:50%;background:#e0e0e0;color:#666;font-size:7px;font-weight:700;cursor:pointer;vertical-align:middle;position:relative;top:-1px;margin-right:3px;" onclick="positionTip(this)" onmouseenter="positionTip(this)" onmouseleave="document.getElementById('method-tip').style.display='none'">?</span>Highest Association: <strong>${d.meta.winner} ★</strong></span>${d.meta.topLabel ? `
       <span>Solid Bets: <strong>${d.meta.topLabel}</strong></span>` : ''}
-    </div>
+    </div>`}
     <div class="cat-nav" id="cat-nav"></div>
     <div class="scroll-hint" id="scroll-hint">Swipe →</div>
     <div class="types-grid" id="types-grid">
