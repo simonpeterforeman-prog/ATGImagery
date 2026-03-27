@@ -636,7 +636,6 @@ const CLIENT_VIEW = new URLSearchParams(window.location.search).get('view') === 
 
 // In client view, hide research blurb and sort alphabetically
 if (CLIENT_VIEW) {
-  document.querySelectorAll('.research-blurb, .research-link').forEach(el => el.style.display = 'none');
   const blurb = document.querySelector('.nav-blurb');
   if (blurb) blurb.textContent = 'Product images selected for strong category association and cardholder purchase motivation.';
 }
